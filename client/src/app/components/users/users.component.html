@@ -1,0 +1,194 @@
+
+<div class="user-home-page">
+
+    <div class="navbar-main">
+        <h3>SB Jobs <b>({{username}})</b></h3>
+
+        <div class="navbar-options">
+            <p [ngClass]="userDisplayContent === 'home' ? 'selected' : ''" (click)="userDisplayContent = 'home'">Home</p>
+            <p [ngClass]="userDisplayContent === 'applications' ? 'selected' : ''"  (click)="userDisplayContent = 'applications'">job Applications</p>
+            <p [ngClass]="userDisplayContent === 'profile' ? 'selected' : ''"  (click)="userDisplayContent = 'profile'">Profile</p>
+            
+        </div>
+        <button (click)="logout()">Logout</button>
+    </div>
+
+
+    <!-- Home page (All properties) -->
+    
+    <div class="user-home-container" *ngIf="userDisplayContent === 'home'">
+        
+        <div class="user-home-header">
+            <h3>Available Jobs</h3>
+
+            <div class="jobFilters">
+
+                <span>
+                    <label for="jobSortType">Filter by skill</label>
+                    <input type="text" id="jobSortType" placeholder="Skill" name="skillFilter" [(ngModel)]="skillFilter" (ngModelChange)="skillFilterChanged($event)" >
+                </span>
+ 
+                <span>
+                    <label for="jobavailableFor">Location</label>
+                    <input type="text" id="jobSortType" placeholder="Location" name="locationFilter" [(ngModel)]="locationFilter" (ngModelChange)="locationFilterChanged($event)">
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="user-home-body" >
+
+            <div class="job-list">
+                    
+              <div *ngFor="let job of displayedjobs">
+
+                <div class="job" *ngIf="job.status === 'Available'">
+
+
+                        <h4>{{job.jobTitle}}</h4>   
+                        <p><b>Company: </b>{{job.companyName}}</p>
+                        <p><b>Experience: </b>{{job.experience}} yrs</p>
+                        <p><b>Skills: </b>&#8377;  {{job.skills}}</p>
+                        <p><b>Location: </b>{{job.location}}</p>
+                        <p><b>No. of Openings: </b>{{job.openings}}</p>
+                        <p><b>CTC: </b>&#8377;  {{job.CTC}} lpa</p>
+
+                    <!-- If not applied -->
+                    <button *ngIf="!job.applicantsList.includes(userId)" mat-raised-button class="primaryBtn" (click)="viewJob(job._id)">View job</button>
+                    
+                    <!-- If already applied -->
+                    <button *ngIf="job.applicantsList.includes(userId)" mat-raised-button class="primaryBtn" disabled>Applied</button>
+
+                </div>
+            </div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- view job -->
+
+    <div class="user-home-container" *ngIf="userDisplayContent === 'viewJob'">
+        
+        <div class="user-home-header">
+            <h3>Job Description</h3>
+
+        </div>
+
+        <div class="user-home-body" >
+
+            
+                <div class="viewJob" *ngIf="jobData">
+                    <h3>{{jobData.jobTitle}}</h3>
+                    <h5>{{jobData.companyName}}</h5>
+                    <span>
+                        <h4>Job Description</h4>
+                        <p>{{jobData.jobDescription}}</p>
+                    </span>
+                    <p><b>Required Skills: </b>{{jobData.skills}}</p>
+                    <p><b>Experience Required: </b>{{jobData.experience}} years</p>
+                    <p><b>Job Location: </b>{{jobData.location}}</p>
+                    <p><b>CTC (Anually): </b>&#8377; {{jobData.CTC}}</p>
+                    <p><b>No of Openings: </b>{{jobData.openings}}</p>
+
+                    <button mat-raised-button class="primaryBtn" (click)="handleJobApply(jobData._id)">Apply now</button>
+                </div>
+            
+        </div>
+
+    </div>
+
+
+    <!-- Applications -->
+
+    <div class="user-home-container" *ngIf="userDisplayContent === 'applications'">
+
+        <div class="user-home-header">
+            <h3>Submitted Applications</h3>
+
+        </div>
+
+        <div class="user-home-body" >
+            <div class="job-list">
+
+                <div *ngFor="let application of applications">
+                  <div class="job" *ngIf="application.applicantId === userId">
+
+
+                    <h4>{{application.jobTitle}}</h4>   
+                    <p><b>Company: </b>{{application.companyName}}</p>
+                    <p><b>Experience: </b>{{application.jobExperience}} yrs</p>
+                    <p><b>CTC (per annum): </b>&#8377; {{application.jobCTC}}</p>
+                    <p><b>Skills: </b>&#8377;  {{application.jobSkills}}</p>
+                    <p><b>Location: </b>  {{application.jobLocation}}</p>
+
+                      <button *ngIf="application.status === 'Pending'" mat-raised-button class="dangerBtn" (click)="withdrawApplication(application._id)" >Withdraw</button>
+
+                    
+                      <button *ngIf="application.status === 'Withdrawn'" mat-raised-button class="dangerBtn" disabled>Withdrawn</button>
+                      <button *ngIf="application.status === 'Rejected'" mat-raised-button class="dangerBtn" disabled>Rejected</button>
+                      <button *ngIf="application.status === 'Accepted'" mat-raised-button class="successBtn" disabled>Accepted</button>
+                  </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- update profile -->
+
+    <div class="user-home-container" *ngIf="userDisplayContent === 'profile'">
+
+        <div class="user-home-header">
+            <h3>Update Profile</h3>
+
+        </div>
+
+        <div class="user-home-body" >
+
+            
+            <div class="update-user-details">
+    
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="floatingUpdatedescription" placeholder="data"  name="jobTitle" [(ngModel)]="userDataName"  >
+                    <label for="floatingUpdatedescription">Username</label>
+                </div>
+                <div class="form-floating">
+                    <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="data" rows="5" name="jobDescription" [(ngModel)]="userDescription" ></textarea>
+                    <label for="exampleFormControlTextarea1">User Description</label>
+                  </div>
+                <span class="span-70-30">
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="floatingUpdatedescription" placeholder="data"  name="skills" [(ngModel)]="userSkills" >
+                        <label for="floatingUpdatedescription">Skills</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="floatingUpdatearea"  placeholder="data" name="experience" [(ngModel)]="userExperience">
+                        <label for="floatingUpdatearea">Experience (yrs)</label>
+                    </div>
+
+                </span>
+
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="floatingUpdatedescription" placeholder="data"  name="resume" [(ngModel)]="userResume"  >
+                    <label for="floatingUpdatedescription">Resume</label>
+                </div>
+
+
+                <button mat-raised-button color="primary" (click)="updateUser()" >Update</button>
+            </div>
+            
+
+    </div>
+
+
+
+</div>

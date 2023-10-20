@@ -1,0 +1,329 @@
+
+<div class="user-home-page">
+
+    <div class="navbar-main">
+        <h3>SB Rentzz</h3>
+    
+        <div class="navbar-options">
+            <p [ngClass]="ownerDisplayContent === 'home' ? 'selected' : ''" (click)="ownerDisplayContent = 'home'">Home</p>
+            <p [ngClass]="ownerDisplayContent === 'addProperty' ? 'selected' : ''"  (click)="ownerDisplayContent = 'addProperty'">Add Property</p>
+            <p [ngClass]="ownerDisplayContent === 'requests' ? 'selected' : ''"  (click)="ownerDisplayContent = 'requests'">Requests</p>
+        </div>
+        <button (click)="logout()">Logout</button>
+    </div>
+    
+
+    <!-- Home (properties) -->
+
+    <div class="user-home-container" *ngIf="ownerDisplayContent === 'home'">
+        
+        <div class="user-home-header">
+            <h3>My Properties</h3>
+            <h4>{{username}} (Owner)</h4>
+        </div>
+
+        <div class="user-home-body" >
+
+            <div class="property-list">
+
+                <div *ngFor="let property of properties">
+
+                    <div class="property" *ngIf="property.ownerId === userId">
+    
+                        <div id="carouselExampleControlsOwnerHome" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+
+                                <div class='carousel-item active'>
+                                    <img src={{property.carouselImage1}} class="d-block w-100" alt="...">
+                                </div>
+                                <div class='carousel-item'>
+                                    <img src={{property.carouselImage2}} class="d-block w-100" alt="...">
+                                </div>
+                                <div class='carousel-item'>
+                                    <img src={{property.carouselImage3}} class="d-block w-100" alt="...">
+                                </div>
+                             
+        
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControlsOwnerHome" data-bs-slide="prev">
+                              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                              <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControlsOwnerHome" data-bs-slide="next">
+                              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                              <span class="visually-hidden">Next</span>
+                            </button>
+                          </div>
+    
+                        <h4>{{property.description}}</h4>
+                        <span>
+                            <p><b>Rent: </b>&#8377;  {{property.rent}}/-</p>
+                            <p><b>Area: </b>{{property.area}} sq.ft</p>
+                        </span>
+                        <p><b>Agreement Duration: </b>{{property.agreementDuration}} mths</p>
+                        <p><b>Deposit: </b>&#8377;  {{property.deposit}}/-</p>
+                        <p><b>Available for: </b>{{property.availableFor}}</p>
+                        <p><b>Furnished: </b>{{property.furnished}}</p>
+                        <p><b>Address: </b>{{property.address}}</p>
+                        <p><b>Status: </b>{{property.status}}</p>
+    
+                        <span>
+                            <button mat-raised-button class="primaryBtn" (click)="handleUpdate(property._id)">Update</button>
+
+                            <button *ngIf="property.status === 'Booked'" mat-raised-button class="dangerBtn" (click)="vacateTenent(property._id)">Vacate</button>
+
+                            <button *ngIf="property.status === 'Available'" mat-raised-button class="dangerBtn" (click)="freezeProperty(property._id)">Freeze</button>
+
+                            <button *ngIf="property.status === 'Freezed'" mat-raised-button class="successBtn" (click)="activateProperty(property._id)">Activate</button>
+                        </span>
+    
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+
+    </div>
+    
+
+
+
+        <!-- New Property -->
+
+        <div class="user-home-container" *ngIf="ownerDisplayContent === 'addProperty'">
+            <div class="user-home-header">
+                <h3>New Property Details</h3>
+                <h4>{{username}} (Owner)</h4>
+            </div>
+
+            <div class="user-home-body" >
+                
+                <div class="update-owner-details">
+    
+                    <span class="span-70-30">
+    
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingUpdatedescription"  name="description" [(ngModel)]="description" >
+                            <label for="floatingUpdatedescription">Description</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingUpdatearea"  name="area" [(ngModel)]="area">
+                            <label for="floatingUpdatearea">Area (sq.ft)</label>
+                        </div>
+    
+                    </span>
+    
+                    <span class="span-33-33-33">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingUpdatepropImg1"  name="propImg1" [(ngModel)]="carouselImage1">
+                            <label for="floatingUpdatepropImg1">Property Image 1</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingUpdatepropImg2"  name="propImg2" [(ngModel)]="carouselImage2">
+                            <label for="floatingUpdatepropImg2">Property Image 2</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingUpdatepropImg3"  name="propImg3" [(ngModel)]="carouselImage3">
+                            <label for="floatingUpdatepropImg3">Property Image 3</label>
+                        </div>
+                    </span>
+    
+                    <span class="span-50-25-25">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingUpdateaddress"  name="address" [(ngModel)]="address">
+                            <label for="floatingUpdateaddress">Address</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="floatingUpdaterent"  name="rent" [(ngModel)]="rent">
+                            <label for="floatingUpdaterent">Rent (per month)</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="floatingUpdatedeposit"  name="deposit" [(ngModel)]="deposit">
+                            <label for="floatingUpdatedeposit">Deposit</label>
+                        </div>
+                    </span>
+    
+                    <span class="span-33-33-33">
+                        <div class="form-floating">
+                            <select class="form-control" id="floatingUpdateFurniture"  name="Furniture" [(ngModel)]="furnished">
+                                <option value="Un Furnished">Un Furnished</option>
+                                <option value="Semi Furnished">Semi Furnished</option>
+                                <option value="Fully Furnished">Fully Furnished</option>
+                            </select>
+                            <label for="floatingUpdateFurniture">Furniture</label>
+                        </div>
+                        <div class="form-floating">
+                            <select class="form-control" id="floatingUpdateAvailablefor"  name="Availablefor" [(ngModel)]="availableFor">
+                                <option value="All">All</option>
+                                <option value="Family">Family</option>
+                                <option value="Bachelors">Bachelors</option>
+                                <option value="Commercial">Commercial</option>
+                            </select>
+                            <label for="floatingUpdateAvailablefor">Available For</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="floatingUpdateagreement"  name="agreement" [(ngModel)]="agreementDuration">
+                            <label for="floatingUpdateagreement">Agreement (in months)</label>
+                        </div>
+                    </span>
+    
+    
+    
+                    <button mat-raised-button color="primary" (click)="newProperty()">Add Property</button>
+                </div>
+    
+            </div>
+        </div>
+
+
+
+
+
+        <!-- Update property data -->
+
+        <div class="user-home-container"  *ngIf="ownerDisplayContent === 'update'">
+            <div class="user-home-header">
+                <h3>Update Property Details</h3>
+                <h4>{{username}} (Owner)</h4>
+            </div>
+
+            <div class="user-home-body">
+                
+                <div class="update-owner-details">
+
+                    <span class="span-70-30">
+    
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingUpdatedescription"  name="description" [(ngModel)]="descriptionUpdate" >
+                            <label for="floatingUpdatedescription">Description</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingUpdatearea"  name="area" [(ngModel)]="areaUpdate">
+                            <label for="floatingUpdatearea">Area (sq.ft)</label>
+                        </div>
+    
+                    </span>
+    
+                    <span class="span-33-33-33">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingUpdatepropImg1"  name="propImg1" [(ngModel)]="carouselImage1Update">
+                            <label for="floatingUpdatepropImg1">Property Image 1</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingUpdatepropImg2"  name="propImg2" [(ngModel)]="carouselImage2Update">
+                            <label for="floatingUpdatepropImg2">Property Image 2</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingUpdatepropImg3"  name="propImg3" [(ngModel)]="carouselImage3Update">
+                            <label for="floatingUpdatepropImg3">Property Image 3</label>
+                        </div>
+                    </span>
+    
+                    <span class="span-50-25-25">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingUpdateaddress"  name="address" [(ngModel)]="addressUpdate">
+                            <label for="floatingUpdateaddress">Address</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="floatingUpdaterent"  name="rent" [(ngModel)]="rentUpdate">
+                            <label for="floatingUpdaterent">Rent (per month)</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="floatingUpdatedeposit"  name="deposit" [(ngModel)]="depositUpdate">
+                            <label for="floatingUpdatedeposit">Deposit</label>
+                        </div>
+                    </span>
+    
+                    <span class="span-33-33-33">
+                        <div class="form-floating">
+                            <select class="form-control" id="floatingUpdateFurniture"  name="Furniture" [(ngModel)]="furnishedUpdate">
+                                <option value="Un Furnished">Un Furnished</option>
+                                <option value="Semi Furnished">Semi Furnished</option>
+                                <option value="Fully Furnished">Fully Furnished</option>
+                            </select>
+                            <label for="floatingUpdateFurniture">Furniture</label>
+                        </div>
+                        <div class="form-floating">
+                            <select class="form-control" id="floatingUpdateAvailablefor"  name="Availablefor" [(ngModel)]="availableForUpdate">
+                                <option value="All">All</option>
+                                <option value="Family">Family</option>
+                                <option value="Bachelors">Bachelors</option>
+                                <option value="Commercial">Commercial</option>
+                            </select>
+                            <label for="floatingUpdateAvailablefor">Available For</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="floatingUpdateagreement"  name="agreement" [(ngModel)]="agreementDurationUpdate">
+                            <label for="floatingUpdateagreement">Agreement (in months)</label>
+                        </div>
+                    </span>
+
+
+                    <button mat-raised-button color="primary" (click)="updateProperty()">Update</button>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Pending Requests -->
+
+    <div class="user-home-container" *ngIf="ownerDisplayContent === 'requests'">
+
+        <div class="user-home-header">
+            <h3>Pending Applications</h3>
+            <h4>{{username}} (Owner)</h4>
+        </div>
+
+        <div class="user-home-body" >
+            <div class="property-list">
+
+                <div *ngFor="let application of applications">
+
+                    <div class="property" *ngIf="application.ownerId === userId" >
+    
+                        <div id="carouselExampleControls2" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img src={{application.carouselImage1}} class="d-block w-100" alt="...">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src={{application.carouselImage2}} class="d-block w-100" alt="...">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src={{application.carouselImage3}} class="d-block w-100" alt="...">
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls2" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls2" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+    
+                        <h4>{{application.description}}</h4>
+                        <span>
+                            <p><b>Rent: </b>&#8377;  {{application.rent}}/-</p>
+                            <p><b>Deposit: </b>&#8377;  {{application.deposit}}/-</p>
+                        </span>
+                        <p><b>Address: </b>1-56, Gachibowli, Hyderabad</p>
+                        <p><b>Customer: </b>{{application.applicantName}}</p>
+                        <p><b>Email: </b>{{application.applicantEmail}}</p>
+                        <span>
+                            <button mat-raised-button class="primaryBtn" (click)="approveApplication(application._id)">Approve</button>
+                            <button mat-raised-button class="dangerBtn" (click)="rejectApplication(application._id)">Reject</button>
+                        </span>
+                    </div>
+                </div>
+ 
+
+            </div>
+
+        </div>
+</div>

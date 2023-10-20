@@ -1,0 +1,177 @@
+
+<div class="user-home-page">
+
+    <div class="navbar-main">
+        <h3>SB Rentzz (Admin)</h3>
+    
+        <div class="navbar-options">
+            <p [ngClass]="adminDisplayContent === 'home' ? 'selected' : ''" (click)="adminDisplayContent = 'home'">Home</p>
+            <p [ngClass]="adminDisplayContent === 'users' ? 'selected' : ''"  (click)="adminDisplayContent = 'users'">Users</p>
+            <p [ngClass]="adminDisplayContent === 'owners' ? 'selected' : ''"  (click)="adminDisplayContent = 'owners'">Companies</p>
+            <p [ngClass]="adminDisplayContent === 'requests' ? 'selected' : ''"  (click)="adminDisplayContent = 'requests'">Applications</p>
+        </div>
+        <button (click)="logout()">Logout</button>
+    </div>
+    
+
+    <!-- Home (jobs) -->
+
+    <div class="user-home-container" *ngIf="adminDisplayContent === 'home'">
+        
+        <div class="user-home-header">
+            <h3>All jobs</h3>
+            <div class="jobFilters">
+                <span>
+                    <label for="jobSortType">Filter by skill</label>
+                    <input type="text" id="jobSortType" placeholder="Skill" name="skillFilter" [(ngModel)]="skillFilter" (ngModelChange)="skillFilterChanged($event)" >
+                </span>
+
+                <span>
+                    <label for="jobavailableFor">Location</label>
+                    <input type="text" id="jobSortType" placeholder="Location" name="locationFilter" [(ngModel)]="locationFilter" (ngModelChange)="locationFilterChanged($event)">
+                </span>
+            </div>
+        </div>
+
+        <div class="user-home-body" >
+
+            <div class="job-list">
+
+                <div class="job" *ngFor="let job of displayedjobs">
+
+
+                    <h4>{{job.jobTitle}}</h4>   
+                    <p><b>Company: </b>{{job.companyName}}</p>
+                    <p><b>Experience: </b>{{job.experience}} yrs</p>
+                    <p><b>Skills: </b>&#8377;  {{job.skills}}</p>
+                    <p><b>Location: </b>{{job.location}}</p>
+                    <p><b>No. of Openings: </b>{{job.openings}}</p>
+                    <p><b>CTC: </b>&#8377;  {{job.CTC}} lpa</p>
+
+                    <button *ngIf="job.status === 'Available'" mat-raised-button class="dangerBtn" (click)="freezeJob(job._id)">Freeze</button>
+                    <button *ngIf="job.status === 'Freezed'" mat-raised-button class="dangerBtn" disabled>Freezed</button>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Users -->
+
+    <div class="user-home-container" *ngIf="adminDisplayContent === 'users'">
+
+        <div class="user-home-header">
+            <h3>All Users</h3>
+        </div>
+        <div class="user-home-body">
+            <div class="users-list">
+                <div *ngFor="let user of users">
+                    <div class="user" *ngIf="user.usertype === 'user'">
+                        <span>
+                            <h5>UserId</h5>
+                            <p>{{user._id}}</p>
+                        </span>
+                        <span>
+                            <h5>Username</h5>
+                            <p>{{user.username}}</p>
+                        </span>
+                        <span>
+                            <h5>Email</h5>
+                            <p>{{user.email}}</p>
+                        </span>
+                        <span>
+                            <h5>Applications</h5>
+                            <p>{{applicationsCount(user._id)}}</p>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Owners -->
+
+    <div class="user-home-container" *ngIf="adminDisplayContent === 'owners'">
+
+        <div class="user-home-header">
+            <h3>All Companies</h3>
+        </div>
+        <div class="user-home-body">
+            <div class="users-list">
+                <div *ngFor="let user of users">
+                    <div class="user" *ngIf="user.usertype === 'company'">
+                        <span>
+                            <h5>Company Id</h5>
+                            <p>{{user._id}}</p>
+                        </span>
+                        <span>
+                            <h5>Company name</h5>
+                            <p>{{user.username}}</p>
+                        </span>
+                        <span>
+                            <h5>Email</h5>
+                            <p>{{user.email}}</p>
+                        </span>
+                        <span>
+                            <h5>Jobs posted</h5>
+                            <p>{{jobsPosted(user._id)}}</p>
+                        </span>
+                        <span>
+                            <h5>Applications accepted</h5>
+                            <p>{{applicationAccepted(user._id)}}</p>
+                        </span>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <!-- Applications -->
+
+    <div class="user-home-container" *ngIf="adminDisplayContent === 'requests'">
+
+        <div class="user-home-header">
+            <h3>All Applications</h3>
+        </div>
+
+        <div class="user-home-body" >
+            <div class="job-list">
+
+                    <div class="job" *ngFor="let application of applications">
+
+                        
+
+                        <h4>{{application.jobTitle}}</h4>   
+                        <p><b>Company: </b>{{application.companyName}}</p>
+                        <p><b>Experience: </b>{{application.jobExperience}} yrs</p>
+                        <p><b>CTC (per annum): </b>&#8377; {{application.jobCTC}}</p>
+                        <p><b>Skills: </b>&#8377;  {{application.jobSkills}}</p>
+                        <p><b>Applicant: </b>  {{application.applicantName}}</p>
+                        <p><b>Applicant Email: </b>  {{application.applicantEmail}}</p>
+                        <p><b>Applicant Resume: </b>  <a href={{application.applicantResume}} target="_blank" >Resume</a> </p>
+
+                        <button *ngIf="application.status === 'pending'" mat-raised-button class="dangerBtn" >Pending</button>
+                        <button *ngIf="application.status === 'Withdrawn'" mat-raised-button class="dangerBtn" >Withdrawn</button>
+                        <button *ngIf="application.status === 'Rejected'" mat-raised-button class="dangerBtn" >Rejected</button>
+                        <button *ngIf="application.status === 'Accepted'" mat-raised-button class="successBtn" >Accepted</button>
+
+                    </div>
+
+            </div>
+
+        </div>
+
+    
+
+</div>

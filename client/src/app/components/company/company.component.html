@@ -1,0 +1,211 @@
+
+<div class="user-home-page">
+
+    <div class="navbar-main">
+        <h3>SB Jobs</h3>
+    
+        <div class="navbar-options">
+            <p [ngClass]="companyDisplayContent === 'home' ? 'selected' : ''" (click)="companyDisplayContent = 'home'">Home</p>
+            <p [ngClass]="companyDisplayContent === 'addjob' ? 'selected' : ''"  (click)="companyDisplayContent = 'addjob'">New Job Posting</p>
+            <p [ngClass]="companyDisplayContent === 'requests' ? 'selected' : ''"  (click)="companyDisplayContent = 'requests'">Applications</p>
+        </div>
+        <button (click)="logout()">Logout</button>
+    </div>
+    
+
+    <!-- Home (properties) -->
+
+    <div class="user-home-container" *ngIf="companyDisplayContent === 'home'">
+        
+        <div class="user-home-header">
+            <h3>Job Postings</h3>
+            <h4>{{username}} (Company)</h4>
+        </div>
+
+        <div class="user-home-body" >
+
+            <div class="job-list">
+
+                <div *ngFor="let job of jobs">
+
+                    <div class="job" *ngIf="job.companyId === userId">
+        
+                        <h4>{{job.jobTitle}}</h4>   
+                        <p><b>Company: </b>{{job.companyName}}</p>
+                        <p><b>Experience: </b>{{job.experience}} yrs</p>
+                        <p><b>Skills: </b>&#8377;  {{job.skills}}/-</p>
+                        <p><b>Location: </b>{{job.location}}</p>
+                        <p><b>No. of Openings: </b>{{job.openings}}</p>
+                        <p><b>CTC: </b>&#8377;  {{job.CTC}} lpa</p>
+                        <p><b>Status: </b>{{job.status}}</p>
+    
+                        <span>
+                            <button mat-raised-button class="primaryBtn" (click)="handleUpdate(job._id)">Update</button>
+
+
+                            <button *ngIf="job.status === 'Available'" mat-raised-button class="dangerBtn" (click)="freezeJob(job._id)" >Freeze</button> 
+                            <button *ngIf="job.status === 'Freezed'" mat-raised-button class="successBtn" (click)="activateJob(job._id)">Activate</button> 
+
+                        </span>
+    
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+
+    </div>
+    
+
+
+
+        <!-- New job -->
+
+        <div class="user-home-container" *ngIf="companyDisplayContent === 'addjob'">
+            <div class="user-home-header">
+                <h3>New Job Posting</h3>
+                <h4>{{username}} (Company) </h4>
+            </div>
+
+            <div class="user-home-body" >
+                
+                <div class="update-company-details">
+    
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="floatingUpdatedescription" placeholder="data"  name="jobTitle" [(ngModel)]="jobTitle"  >
+                        <label for="floatingUpdatedescription">Job Title</label>
+                    </div>
+                    <div class="form-floating">
+                        <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="data" rows="5" name="jobDescription" [(ngModel)]="jobDescription" ></textarea>
+                        <label for="exampleFormControlTextarea1">Job Description</label>
+                      </div>
+                    <span class="span-70-30">
+    
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingUpdatedescription" placeholder="data"  name="skills" [(ngModel)]="skills" >
+                            <label for="floatingUpdatedescription">Skills Required</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingUpdatearea"  placeholder="data" name="experience" [(ngModel)]="experience">
+                            <label for="floatingUpdatearea">Experience (yrs)</label>
+                        </div>
+    
+                    </span>
+    
+                    <span class="span-50-25-25">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingUpdateaddress" placeholder="data" name="location" [(ngModel)]="location">
+                            <label for="floatingUpdateaddress">Job Location</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingUpdaterent" placeholder="data" name="CTC" [(ngModel)]="CTC">
+                            <label for="floatingUpdaterent">CTC (Annual)</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="floatingUpdatedeposit" placeholder="data"  name="openings" [(ngModel)]="openings">
+                            <label for="floatingUpdatedeposit">No of Openings</label>
+                        </div>
+                    </span>
+                    <button mat-raised-button color="primary" (click)="newJob()">Add Job Posting</button>
+                </div>
+    
+            </div>
+        </div>
+
+
+
+
+
+        <!-- Update job data -->
+
+        <div class="user-home-container" *ngIf="companyDisplayContent === 'updatejob'">
+            <div class="user-home-header">
+                <h3>New Job Posting</h3>
+                <h4>{{username}} (Company) </h4>
+            </div>
+
+            <div class="user-home-body" >
+                
+                <div class="update-company-details">
+    
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="floatingUpdatedescription" placeholder="data"  name="jobTitleUpdate" [(ngModel)]="jobTitleUpdate"  >
+                        <label for="floatingUpdatedescription">Job Title</label>
+                    </div>
+                    <div class="form-floating">
+                        <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="data" rows="5" name="jobDescriptionUpdate" [(ngModel)]="jobDescriptionUpdate" ></textarea>
+                        <label for="exampleFormControlTextarea1">Job Description</label>
+                      </div>
+                    <span class="span-70-30">
+    
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingUpdatedescription" placeholder="data"  name="skillsUpdate" [(ngModel)]="skillsUpdate" >
+                            <label for="floatingUpdatedescription">Skills Required</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingUpdatearea"  placeholder="data" name="experienceUpdate" [(ngModel)]="experienceUpdate">
+                            <label for="floatingUpdatearea">Experience (yrs)</label>
+                        </div>
+    
+                    </span>
+    
+                    <span class="span-50-25-25">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingUpdateaddress" placeholder="data" name="locationUpdate" [(ngModel)]="locationUpdate">
+                            <label for="floatingUpdateaddress">Job Location</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="floatingUpdaterent" placeholder="data" name="CTCUpdate" [(ngModel)]="CTCUpdate">
+                            <label for="floatingUpdaterent">CTC (Annual)</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="floatingUpdatedeposit" placeholder="data"  name="openingsUpdate" [(ngModel)]="openingsUpdate">
+                            <label for="floatingUpdatedeposit">No of Openings</label>
+                        </div>
+                    </span>
+                    <button mat-raised-button color="primary" (click)="updateProperty()">Update Job Posting</button>
+                </div>
+    
+            </div>
+        </div>
+
+
+        <!-- Pending Requests -->
+
+    <div class="user-home-container" *ngIf="companyDisplayContent === 'requests'">
+
+        <div class="user-home-header">
+            <h3>Pending Applications</h3>
+            <h4>{{username}} (Company)</h4>
+        </div>
+
+        <div class="user-home-body" >
+            <div class="job-list">
+
+                <div *ngFor="let application of applications">
+
+                    <div class="job" *ngIf="application.companyId === userId && application.status !== 'Withdrawn'" >
+    
+                        
+                        <h4>{{application.jobTitle}}</h4>   
+                        <p><b>Company: </b>{{application.companyName}}</p>
+                        <p><b>Experience: </b>{{application.jobExperience}} yrs</p>
+                        <p><b>CTC (per annum): </b>&#8377; {{application.jobCTC}}</p>
+                        <p><b>Skills: </b>&#8377;  {{application.jobSkills}}</p>
+                        <p><b>Location: </b> {{application.jobLocation}}</p>
+                        <span *ngIf="application.status === 'pending'" >
+                            <button mat-raised-button class="primaryBtn" (click)="approveApplication(application._id)">Approve</button>
+                            <button mat-raised-button class="dangerBtn" (click)="rejectApplication(application._id)">Reject</button>
+                        </span>
+                        <button *ngIf="application.status === 'Accepted'" mat-raised-button class="primaryBtn" disbled>Accepted</button>
+                        <button *ngIf="application.status === 'Rejected'" mat-raised-button class="dangerBtn" disbled>Rejected</button>
+                    </div>
+                </div>
+ 
+
+            </div>
+
+        </div>
+</div>

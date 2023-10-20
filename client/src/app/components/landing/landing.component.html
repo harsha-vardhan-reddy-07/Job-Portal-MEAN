@@ -1,0 +1,80 @@
+  
+<div class="landing-page" id="home">
+
+
+    <div class="landing-hero">
+        
+        <div class="landing-hero-data">
+            <h1>SB Jobs: A Step Closer towards Your Dream Job</h1>
+            <p>Choose your dream job from the top most opportunities available in the sb jobs platform. Choose the opportunities across various domains and fields</p>
+            <a href="#joinNow">Join Now</a>
+        </div>
+
+    </div>
+
+    <div class="about" id="about">
+        <h2>About</h2>
+        <div class="about-body">
+            <div class="about-data">
+                <p>&nbsp; &nbsp; &nbsp; &nbsp; Welcome to <b> SB Jobs</b>, your dedicated job searching portal and trusted partner in finding the perfect career. We are committed to simplifying your job search journey by offering a wide range of convenient and flexible solutions. Your safety and confidence are of the utmost importance to us, which is why <b> SB Jobs</b> has implemented advanced security measures to safeguard your information.</p>
+                <br>
+                <p>&nbsp; &nbsp; &nbsp; &nbsp; Our experienced team is here to provide personalized service and quick assistance throughout your job search process. Additionally, we actively support community initiatives, making a positive impact beyond just finding you a job.</p>
+                <br>
+                <p>&nbsp; &nbsp; &nbsp; &nbsp; Explore <b> SB Jobs</b> for a modern and secure job searching experience. Rest assured, we prioritize the confidentiality and integrity of your personal and job-related information, ensuring a protected environment for all your interactions and transactions.</p>
+            </div>
+            <div class="Authentication" id="joinNow">
+
+                <div  [ngClass]="{ 'hide': authType !== 'login', 'Auth': authType === 'login' }">
+                    <form>
+                        <h3>Login</h3>
+                        <div class=" form-floating mb-3">
+                            <input type="email" class="form-control " id="exampleInputEmail1" aria-describedby="emailHelp" name="email" [(ngModel)]="email">
+                            <label for="exampleInputEmail1" class="form-label">Email address</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="exampleInputPassword1" name="password" [(ngModel)]="password">
+                            <label for="exampleInputPassword1" class="form-label">Password</label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" (click)="login()">Login</button>
+                        <p>not registered ? <span (click)="changeAuthType('register')">Register now!!</span></p>
+                      </form>
+                </div>
+                <div  [ngClass]="{ 'hide': authType !== 'register', 'Auth': authType === 'register' }">
+
+                    <form>
+                        <h3>Register</h3>
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="exampleInputEmail2" aria-describedby="emailHelp" name="email" [(ngModel)]="email">
+                            <label for="exampleInputEmail2" class="form-label">Email address</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="exampleInputUsername2" name="username" [(ngModel)]="username">
+                            <label for="exampleInputUsername2" class="form-label">Username</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="exampleInputPassword2" name="password" [(ngModel)]="password">
+                            <label for="exampleInputPassword2" class="form-label">Password</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <select class="form-select" id="userTypeSelect" aria-label="Default select example" name="usertype" [(ngModel)]="usertype">
+                                <option selected></option>
+                                <option value="user">User</option>
+                                <option value="company">Company</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                            <label for="userTypeSelect" class="form-label">User Type</label>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary" (click)="register()">Register</button>
+                        <p>Already registered ? <span (click)="changeAuthType('login')">Login now!!</span></p>
+                      </form>
+
+                </div>
+            </div>
+        </div>
+
+        <footer>All rights reserved - @ SB Jobs</footer>
+    </div>
+
+</div>
